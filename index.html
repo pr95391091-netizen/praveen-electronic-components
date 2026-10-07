@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PRAVEEN RAJ COMPONENTS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#17202a}
+header{background:#111827;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
+.brand{font-size:22px;font-weight:800}.sub{font-size:12px;color:#cbd5e1}
+.search{margin-top:12px;width:100%;padding:12px;border:0;border-radius:10px;font-size:16px}
+nav{display:flex;gap:8px;overflow:auto;padding:10px;background:#fff;position:sticky;top:91px;z-index:4}
+nav button{border:1px solid #ddd;background:#fff;border-radius:20px;padding:9px 14px;white-space:nowrap}
+.hero{margin:12px;padding:18px;border-radius:16px;background:#e5eefc}
+.hero h1{margin:0 0 6px;font-size:24px}.hero p{margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px}
+.card{background:#fff;border-radius:14px;padding:10px;box-shadow:0 2px 8px #00000012}
+.pic{height:120px;border-radius:10px;background:#eef2f7;display:flex;align-items:center;justify-content:center;font-size:42px}
+.name{font-weight:700;margin-top:8px}.price{font-size:18px;font-weight:800;margin:6px 0}.old{text-decoration:line-through;color:#888;font-size:13px}.add{width:100%;padding:10px;border:0;border-radius:9px;background:#16a34a;color:white;font-weight:700}
+#cart{position:fixed;right:14px;bottom:16px;background:#111827;color:#fff;padding:14px 18px;border-radius:30px;box-shadow:0 5px 20px #0004}
+footer{text-align:center;padding:25px;color:#667085}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">⚡ PRAVEEN RAJ</div><div class="sub">ELECTRONIC COMPONENTS</div>
+<input id="search" class="search" placeholder="Product search करें..." oninput="render()">
+</header>
+<nav>
+<button onclick="setCat('All')">All</button><button onclick="setCat('Modules')">Modules</button>
+<button onclick="setCat('Sensors')">Sensors</button><button onclick="setCat('LED')">LED</button>
+<button onclick="setCat('Solar')">Solar</button><button onclick="setCat('Motors')">Motors</button>
+</nav>
+<section class="hero"><h1>Electronic Components Store</h1><p>Modules • Sensors • LED • Solar • Motors • Tools</p></section>
+<main id="products" class="grid"></main>
+<div id="cart">🛒 Cart: <span id="count">0</span></div>
+<footer>PRAVEEN RAJ COMPONENTS<br>WhatsApp orders जल्द उपलब्ध होंगे</footer>
+<script>
+const products=[
+{name:'12V Relay Module',price:120,old:150,cat:'Modules',icon:'🔌'},
+{name:'LDR Light Sensor Module',price:65,old:80,cat:'Sensors',icon:'☀️'},
+{name:'12V LED Light',price:90,old:110,cat:'LED',icon:'💡'},
+{name:'12V PWM Solar Controller',price:250,old:300,cat:'Solar',icon:'🔋'},
+{name:'12V DC Gear Motor',price:180,old:220,cat:'Motors',icon:'⚙️'},
+{name:'5V Relay Module',price:55,old:70,cat:'Modules',icon:'🔧'},
+{name:'IR Sensor Module',price:75,old:95,cat:'Sensors',icon:'📡'},
+{name:'Mini Solar Panel',price:150,old:180,cat:'Solar',icon:'🌞'}
+];
+let cat='All',cart=0;
+function setCat(c){cat=c;render()}
+function render(){
+ let q=document.getElementById('search').value.toLowerCase();
+ let list=products.filter(p=>(cat==='All'||p.cat===cat)&&p.name.toLowerCase().includes(q));
+ document.getElementById('products').innerHTML=list.map((p,i)=>`<article class="card">
+ <div class="pic">${p.icon}</div><div class="name">${p.name}</div>
+ <div class="price">₹${p.price} <span class="old">₹${p.old}</span></div>
+ <button class="add" onclick="add()">Add to Cart</button></article>`).join('');
+}
+function add(){cart++;document.getElementById('count').textContent=cart}
+render();
+</script>
+</body>
+</html>
