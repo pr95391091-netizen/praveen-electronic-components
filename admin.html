@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PRAVEEN RAJ - Admin</title>
+
+<style>
+body{font-family:Arial;margin:0;background:#f4f6f8;color:#111827}
+header{background:#111827;color:white;padding:18px}
+main{max-width:700px;margin:auto;padding:15px}
+.box{background:white;padding:16px;margin-bottom:15px;border-radius:14px}
+input,select,button{width:100%;padding:12px;margin:6px 0;box-sizing:border-box;border-radius:8px;border:1px solid #ccc}
+button{background:#111827;color:white;border:0;font-weight:bold}
+.green{background:#16a34a}
+.red{background:#dc2626}
+.product{border:1px solid #ddd;padding:12px;border-radius:10px;margin:10px 0}
+img{max-width:100px;max-height:100px}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>⚡ PRAVEEN RAJ COMPONENTS</h2>
+<div>Admin Panel</div>
+</header>
+
+<main>
+
+<div id="authBox" class="box">
+<h3>Admin Login</h3>
+
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button class="green" onclick="signup()">Create Admin Account</button>
+<button onclick="login()">Login</button>
+
+<p id="authMsg"></p>
+</div>
+
+<div id="adminBox" class="hidden">
+
+<div class="box">
+<h3>➕ Add Product</h3>
+
+<input id="name" placeholder="Product name">
+<input id="price" type="number" placeholder="Price">
+<input id="old_price" type="number" placeholder="Old price (optional)">
+
+<select id="category">
+<option>Modules</option>
+<option>Sensors</option>
+<option>LED</option>
+<option>Solar</option>
+<option>Motors</option>
+<option>Other</option>
+</select>
+
+<input id="image_url" placeholder="Product image URL (optional)">
+
+<button class="green" onclick="addProduct()">Add Product</button>
+
+<p id="productMsg"></p>
+</div>
+
+<div class="box">
+<h3>📦 Products</h3>
+<div id="list">Loading...</div>
+</div>
+
+<button class="red" onclick="logout()">Logout</button>
+
+</div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+"https://woqrhlckfrzcbzbjgqqc.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_6Zv_-xRrKlwTr6YJX20gwA_fXQmRRIA";
+
+const db = supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+async function checkLogin(){
+
+const {data:{session}} =
+await db.auth.getSession();
+
+if(session){
+showAdmin();
+}else{
+document.getElementById("authBox").classList.remove("hidden");
+}
+
+}
+
+function showAdmin(){
+
+document.getElementById("authBox").classList.add("hidden");
+document.getElementById("adminBox").classList.remove("hidden");
+
+loadProducts();
+
+}
+
+async function signup(){
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+if(!email || !password){
+document.getElementById("authMsg").textContent =
+"Email और password भरें";
+return;
+}
+
+const {data,error} =
+await db.auth.signUp({
+email:email,
+password:password
+});
+
+if(error){
+document.getElementById("authMsg").textContent =
+error.message;
+return;
+}
+
+if(data.session){
+showAdmin();
+}else{
+document.getElementById("authMsg").textContent =
+"Account बन गया। Email खोलकर verification करें, फिर Login करें।";
+}
+
+}
+
+async function login(){
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+const {data,error} =
+await db.auth.signInWithPassword({
+email:email,
+password:password
+});
+
+if(error){
+document.getElementById("auth
